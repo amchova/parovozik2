@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>Каталог прогнозов</h2>
+    <p>Выберите интересующие вас аналитические услуги.</p>
+</div>
+
+{% for f in forecasts %}
+<div class="card">
+    <h3>{{ f.title }}</h3>
+    <p><strong>Категория:</strong> {{ f.get_category_display }} |
+       <strong>Регион:</strong> {{ f.region }} |
+       <strong>Цена:</strong> {{ f.price }} ₽</p>
+    <p>{{ f.description|truncatewords:25 }}</p>
+    {% if f.pk in owned_ids %}
+        <a class="btn" href="{% url 'forecast_detail' f.pk %}">Уже приобретено — открыть</a>
+    {% else %}
+        <a class="btn" href="{% url 'buy_forecast' f.pk %}">Приобрести за {{ f.price }} ₽</a>
+    {% endif %}
+</div>
+{% empty %}
+<div class="card"><p>Прогнозы пока не загружены.</p></div>
+{% endfor %}
+{% endblock %}

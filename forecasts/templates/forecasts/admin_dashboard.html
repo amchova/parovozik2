@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>Кабинет администратора: {{ user.username }}</h2>
+    <p>Загружайте прогнозы и создавайте пользователей.</p>
+</div>
+
+<div class="card">
+    <h3>Загрузить новый прогноз</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ forecast_form.as_p }}
+        <button class="btn" type="submit" name="add_forecast">Загрузить прогноз</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Создать пользователя</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button class="btn" type="submit" name="add_user">Создать пользователя</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Загруженные прогнозы</h3>
+    {% if forecasts %}
+    <table>
+        <tr><th>Название</th><th>Категория</th><th>Цена</th><th>Дата</th><th></th></tr>
+        {% for f in forecasts %}
+        <tr>
+            <td>{{ f.title }}</td>
+            <td>{{ f.get_category_display }}</td>
+            <td>{{ f.price }} ₽</td>
+            <td>{{ f.created_at|date:"d.m.Y" }}</td>
+            <td><a class="btn btn-danger" href="{% url 'delete_forecast' f.pk %}">Удалить</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>Прогнозы ещё не загружены.</p>
+    {% endif %}
+</div>
+{% endblock %}

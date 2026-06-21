@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>Личный кабинет: {{ user.username }}</h2>
+    <p>Здесь представлены приобретённые вами услуги.</p>
+    <a class="btn" href="{% url 'catalog' %}">Приобрести новые услуги</a>
+</div>
+
+<div class="card">
+    <h3>Мои прогнозы</h3>
+    {% if purchases %}
+    <table>
+        <tr><th>Название</th><th>Категория</th><th>Регион</th><th>Дата покупки</th><th></th></tr>
+        {% for p in purchases %}
+        <tr>
+            <td>{{ p.forecast.title }}</td>
+            <td>{{ p.forecast.get_category_display }}</td>
+            <td>{{ p.forecast.region }}</td>
+            <td>{{ p.purchased_at|date:"d.m.Y H:i" }}</td>
+            <td><a class="btn" href="{% url 'forecast_detail' p.forecast.pk %}">Открыть</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>Вы ещё не приобрели ни одной услуги.</p>
+    {% endif %}
+</div>
+{% endblock %}
